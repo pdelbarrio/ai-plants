@@ -6,10 +6,14 @@ import {
   saveToDataBase,
 } from "@/lib/plantsHooks";
 import { PlantResponse } from "@/interfaces/plant";
+import clientPromise from "@/lib/mongodb";
+import { ObjectId } from "mongodb";
 
 interface Plant {
   image: string;
 }
+
+const client = await clientPromise;
 
 export async function POST(request: Request) {
   const validationError = await validateRequest();
@@ -52,3 +56,37 @@ export async function POST(request: Request) {
 
   return result;
 }
+
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    const db = client.db();
+
+    const plantsCollecction = db.collection("plants");
+
+    if (!id) {
+      const plants = await plantsCollecction.find().toArray();
+      return NextResponse.json(plants);
+    }
+
+    const plant = await plantsCollecction.findOne({ _id: new ObjectId(id) });
+
+    if (!plant) {
+      return NextResponse.json({ error: "Plant not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(plant);
+  } catch (error) {
+    console.error("Error fetching pants", error);
+    return NextResponse.json(
+      {
+        error: "Error fetching plants",
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {}
