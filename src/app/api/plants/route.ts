@@ -89,4 +89,22 @@ export async function GET(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {}
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+
+  const db = client.db();
+
+  const plantsCollecction = db.collection("plants");
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+
+  try {
+    await plantsCollecction.deleteOne({ _id: new ObjectId(id) });
+    return NextResponse.json({ message: "Plant deleted" }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting plant", error);
+  }
+}
