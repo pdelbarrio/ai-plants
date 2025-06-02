@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Plants App",
-  description: "App using OpenAI API",
+  title: "Nuclio App",
+  description: "Nuclio App",
 };
 
 export default function RootLayout({
