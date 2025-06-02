@@ -40,3 +40,7 @@ Esta aplicación permite identificar y analizar plantas a partir de una foto uti
 - Uso de APIs de IA (OpenAI).
 - Gestión de base de datos con MongoDB.
 - Creación de UI modernas con Tailwind CSS.
+
+## URL de la app
+
+[ai-plants.vercel.app](ai-plants.vercel.app)
