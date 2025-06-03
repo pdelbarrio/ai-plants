@@ -6,7 +6,7 @@ Esta aplicación permite identificar y analizar plantas a partir de una foto uti
 
 ## Tecnologías utilizadas
 
-- **Next.js**
+- **Next.js** – Framework de React que incluye Server Components para no tener que realizar un backend dedicado.
 - **OpenAI API** – Se utiliza para procesar la imagen y generar la información sobre la planta.
 - **MongoDB** – Base de datos para almacenar las plantas analizadas.
 - **Tailwind CSS** – Framework de estilos para construir una interfaz limpia y responsive.
@@ -43,4 +43,4 @@ Esta aplicación permite identificar y analizar plantas a partir de una foto uti
 
 ## URL de la app
 
-[ai-plants.vercel.app](ai-plants.vercel.app)
+[https://ai-plants.vercel.app/](https://ai-plants.vercel.app/)
