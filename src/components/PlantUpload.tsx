@@ -13,6 +13,7 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,6 +71,8 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
 
       setImage("");
       onPlantAdded();
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
@@ -129,6 +132,34 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
             </div>
           </div>
 
+          <div
+            className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 ${
+              isDragging
+                ? "border-emerald-500 bg-emerald-100"
+                : "border-emerald-200 hover:border-emerald-400"
+            }`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              disabled={loading}
+            />
+            <div className="text-center">
+              {/* ... tu contenido actual ... */}
+            </div>
+
+            {loading && (
+              <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-xl">
+                <div className="animate-spin h-10 w-10 border-4 border-emerald-500 border-t-transparent rounded-full" />
+              </div>
+            )}
+          </div>
+
           {image && (
             <div className="relative group">
               <img
@@ -161,6 +192,12 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
           {error && (
             <div className="bg-red-100 text-red-700 text-sm p-4 rounded-lg border border-red-200">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-emerald-100 text-emerald-800 p-3 rounded-lg text-center border border-emerald-300">
+              Planta añadida correctamente 🌱
             </div>
           )}
 

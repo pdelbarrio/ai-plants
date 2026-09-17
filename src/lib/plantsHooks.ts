@@ -1,11 +1,6 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import clientPromise from "./mongodb";
 import { PlantResponse } from "@/interfaces/plant";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 const client = await clientPromise;
 
@@ -18,67 +13,80 @@ export function cleanOpenAIResponse(response: string) {
 }
 
 export async function validateRequest() {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.PLANTNET_API_KEY) {
     return NextResponse.json(
-      {
-        error: "OpenAI API key is not defined",
-      },
-      {
-        status: 500,
-      }
+      { error: "PlantNet API key is not defined" },
+      { status: 500 },
     );
   }
 
   if (!process.env.MONGODB_URI) {
     return NextResponse.json(
-      {
-        error: "MongoDB URI is not defined",
-      },
-      {
-        status: 500,
-      }
+      { error: "MongoDB URI is not defined" },
+      { status: 500 },
     );
   }
 }
 
-export async function callOpenAI(image: string) {
-  const prompt = `Analiza esta imagen de una planta y proporciona una respuesta detallada en formato JSON con la siguiente estructura:
+export async function callPlantNet(image: string): Promise<PlantResponse> {
+  // Quitar prefijo data:image/...
+  const base64 = image.replace(/^data:image\/\w+;base64,/, "");
+
+  // Convertir base64 → Buffer
+  const buffer = Buffer.from(base64, "base64");
+
+  // Crear Blob para FormData
+  const blob = new Blob([buffer], { type: "image/jpeg" });
+
+  const formData = new FormData();
+  formData.append("organs", "leaf");
+  formData.append("images", blob, "plant.jpg");
+
+  const response = await fetch(
+    `https://my-api.plantnet.org/v2/identify/all?api-key=${process.env.PLANTNET_API_KEY}`,
     {
-      "name": "Nombre común de la planta",
-      "description": "Breve descripción de las características y apariencia de la planta",
-      "difficult": "easy/medium/hard - basado en qué tan desafiante es mantenerla",
-      "water": ["lunes", "miércoles", "viernes"] - array de días de la semana en español para el riego recomendado,
-      "temperature": number - rango de temperatura óptima en Celsius,
-      "humidity": number - porcentaje de humedad requerido,
-      "light": "low/medium/high - requisitos de luz"
-    }
-    
-    Por favor asegúrate de que todos los valores coincidan exactamente con el formato especificado y los enums. La respuesta debe ser JSON válido.
-    Devuelve solo JSON válido sin comentarios o explicaciones adicionales.`;
+      method: "POST",
+      body: formData,
+    },
+  );
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text: prompt,
-          },
-          {
-            type: "image_url",
-            image_url: {
-              url: image,
-            },
-          },
-        ],
-      },
-    ],
-    temperature: 0.0,
-  });
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("PlantNet error:", errorText);
+    throw new Error("Error calling PlantNet API");
+  }
 
-  return completion.choices[0].message.content;
+  const data = await response.json();
+
+  const suggestion = data?.results?.[0]?.species;
+
+  if (!suggestion) {
+    throw new Error("No plant suggestion found");
+  }
+
+  const plant: PlantResponse = {
+    name: suggestion.scientificNameWithoutAuthor || "Planta desconocida",
+    description:
+      suggestion.description?.value || generateDescription(suggestion),
+    difficulty: "medium",
+    water: ["lunes", "jueves"],
+    temperature: 20,
+    humidity: 50,
+    light: "medium",
+    image,
+  };
+
+  return plant;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function generateDescription(species: any): string {
+  const name = species.scientificNameWithoutAuthor;
+  const common = species.commonNames?.[0];
+
+  return `La planta ${common || name} pertenece a la familia ${
+    species.family?.scientificName || "desconocida"
+  }. Es una especie identificada por PlantNet y puede variar en apariencia según su entorno.`;
 }
 
 export async function saveToDataBase(plant: PlantResponse, image: string) {

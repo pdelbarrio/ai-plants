@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  callOpenAI,
   validateRequest,
-  cleanOpenAIResponse,
   saveToDataBase,
+  callPlantNet,
 } from "@/lib/plantsHooks";
-import { PlantResponse } from "@/interfaces/plant";
 import clientPromise from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
@@ -17,44 +15,26 @@ const client = await clientPromise;
 
 export async function POST(request: Request) {
   const validationError = await validateRequest();
-
-  if (validationError) {
-    return validationError;
-  }
+  if (validationError) return validationError;
 
   const body: Plant = await request.json();
   const { image } = body;
 
   if (!image) {
-    return NextResponse.json(
-      {
-        error: "Image is required",
-      },
-      {
-        status: 400,
-      }
-    );
+    return NextResponse.json({ error: "Image is required" }, { status: 400 });
   }
-
-  const response = await callOpenAI(image);
-
-  if (!response) {
-    throw new Error("No response from OpenAI");
-  }
-
-  let plant: PlantResponse;
 
   try {
-    const cleanedResponse = cleanOpenAIResponse(response);
-    plant = JSON.parse(cleanedResponse);
+    const plant = await callPlantNet(image);
+    const result = await saveToDataBase(plant, image);
+    return result;
   } catch (error) {
-    console.error("Error parsing plant from OpenAI response", error);
-    throw error;
+    console.error("Error processing plant", error);
+    return NextResponse.json(
+      { error: "Error processing plant" },
+      { status: 500 },
+    );
   }
-
-  const result = await saveToDataBase(plant, image);
-
-  return result;
 }
 
 export async function GET(request: Request) {
@@ -63,7 +43,6 @@ export async function GET(request: Request) {
     const id = searchParams.get("id");
 
     const db = client.db();
-
     const plantsCollecction = db.collection("plants");
 
     if (!id) {
@@ -79,12 +58,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json(plant);
   } catch (error) {
-    console.error("Error fetching pants", error);
+    console.error("Error fetching plants", error);
     return NextResponse.json(
-      {
-        error: "Error fetching plants",
-      },
-      { status: 500 }
+      { error: "Error fetching plants" },
+      { status: 500 },
     );
   }
 }
@@ -94,7 +71,6 @@ export async function DELETE(request: Request) {
   const id = searchParams.get("id");
 
   const db = client.db();
-
   const plantsCollecction = db.collection("plants");
 
   if (!id) {
@@ -106,5 +82,9 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ message: "Plant deleted" }, { status: 200 });
   } catch (error) {
     console.error("Error deleting plant", error);
+    return NextResponse.json(
+      { error: "Error deleting plant" },
+      { status: 500 },
+    );
   }
 }

@@ -7,9 +7,13 @@ import Badge from "./ui/Badge";
 
 interface PlantListProps {
   onPlantClick: (plant: PlantResponse & { _id: string }) => void;
+  selectedId?: string;
 }
 
-export default function PlantList({ onPlantClick }: PlantListProps) {
+export default function PlantList({
+  onPlantClick,
+  selectedId,
+}: PlantListProps) {
   const [plants, setPlants] = useState<(PlantResponse & { _id: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +25,15 @@ export default function PlantList({ onPlantClick }: PlantListProps) {
         throw new Error("Error al cargar las plantas");
       }
       const data = await response.json();
-      setPlants(data);
+      setPlants(
+        data.sort(
+          (
+            a: { createdAt: string | number | Date },
+            b: { createdAt: string | number | Date },
+          ) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error desconocido");
     } finally {
@@ -96,7 +108,11 @@ export default function PlantList({ onPlantClick }: PlantListProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {plants.map((plant) => (
-        <Card key={plant._id} onClick={() => onPlantClick(plant)}>
+        <Card
+          key={plant._id}
+          onClick={() => onPlantClick(plant)}
+          className={plant._id === selectedId ? "ring-4 ring-emerald-400" : ""}
+        >
           <div className="relative aspect-square">
             <img
               src={plant.image}

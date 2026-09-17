@@ -10,14 +10,30 @@ export default function Home() {
   const [selectedPlant, setSelectedPlant] = useState<
     (PlantResponse & { _id: string }) | null
   >(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handlePlantClick = (plant: PlantResponse & { _id: string }) => {
     setSelectedPlant(plant);
+    setSelectedId(plant._id);
   };
 
   const handlePlantAdded = () => {
     setRefreshTrigger((prev) => prev + 1);
+
+    fetch("/api/plants")
+      .then((res) => res.json())
+      .then((plants) => {
+        const newest = plants.sort(
+          (
+            a: { createdAt: string | number | Date },
+            b: { createdAt: string | number | Date },
+          ) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )[0];
+        setSelectedPlant(newest);
+        setSelectedId(newest._id);
+      });
   };
 
   const handlePlantDeleted = () => {
@@ -39,7 +55,11 @@ export default function Home() {
           <h2 className="text-2xl font-semibold mb-4 text-black">
             Mis Plantas
           </h2>
-          <PlantList onPlantClick={handlePlantClick} key={refreshTrigger} />
+          <PlantList
+            onPlantClick={handlePlantClick}
+            key={refreshTrigger}
+            selectedId={selectedId ?? undefined}
+          />
         </div>
 
         {selectedPlant && (
