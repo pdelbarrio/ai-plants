@@ -11,9 +11,11 @@ interface CardProps {
 export default function Card({ children, className = "", onClick }: CardProps) {
   return (
     <div
-      className={`bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-md border border-emerald-100 overflow-hidden hover:shadow-lg transition-all duration-200 ${
-        onClick ? "cursor-pointer" : ""
-      } ${className}`}
+      className={`group overflow-hidden rounded-2xl border border-emerald-900/15 bg-[#edf5ee] shadow-[0_8px_24px_-18px_rgba(31,42,36,0.45)] transition-all duration-300 ease-out ${
+        onClick
+          ? "hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-[0_18px_32px_-20px_rgba(31,42,36,0.5)]"
+          : ""
+      } ${onClick ? "cursor-pointer" : ""} ${className}`}
       onClick={onClick}
     >
       {children}

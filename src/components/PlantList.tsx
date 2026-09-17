@@ -47,10 +47,10 @@ export default function PlantList({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[300px]">
+      <div className="flex min-h-[300px] items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-          <p className="text-emerald-700 text-sm">Cargando plantas...</p>
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-slate-200 border-t-emerald-600" />
+          <p className="text-sm text-slate-500">Cargando plantas...</p>
         </div>
       </div>
     );
@@ -58,9 +58,9 @@ export default function PlantList({
 
   if (error) {
     return (
-      <div className="bg-red-100 text-red-700 p-6 rounded-xl text-center border border-red-200">
+      <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-700">
         <svg
-          className="w-12 h-12 mx-auto mb-4 text-red-500"
+          className="mx-auto mb-4 h-12 w-12 text-rose-500"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -79,8 +79,8 @@ export default function PlantList({
 
   if (plants.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="w-16 h-16 mx-auto mb-4 text-emerald-500">
+      <div className="py-12 text-center">
+        <div className="mx-auto mb-4 h-16 w-16 text-emerald-600">
           <svg
             className="w-full h-full"
             fill="none"
@@ -95,10 +95,10 @@ export default function PlantList({
             />
           </svg>
         </div>
-        <h3 className="text-lg font-medium text-emerald-800 mb-2">
+        <h3 className="mb-2 text-lg font-semibold text-slate-800">
           No hay plantas registradas
         </h3>
-        <p className="text-emerald-600">
+        <p className="text-sm text-slate-500">
           Sube una imagen para comenzar a analizar tus plantas
         </p>
       </div>
@@ -106,12 +106,16 @@ export default function PlantList({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {plants.map((plant) => (
         <Card
           key={plant._id}
           onClick={() => onPlantClick(plant)}
-          className={plant._id === selectedId ? "ring-4 ring-emerald-400" : ""}
+          className={
+            plant._id === selectedId
+              ? "ring-2 ring-emerald-500 ring-offset-2"
+              : ""
+          }
         >
           <div className="relative aspect-square">
             <img
@@ -119,16 +123,16 @@ export default function PlantList({
               alt={plant.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-200" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </div>
           <div className="p-5">
-            <h3 className="text-lg font-semibold text-emerald-800 mb-2">
+            <h3 className="mb-2 text-lg font-semibold tracking-tight text-slate-900">
               {plant.name}
             </h3>
-            <p className="text-sm text-emerald-700 line-clamp-2">
+            <p className="line-clamp-2 text-sm leading-6 text-slate-500">
               {plant.description}
             </p>
-            <div className="mt-4 flex items-center space-x-2">
+            <div className="mt-4 flex flex-wrap items-center gap-2">
               <Badge variant="difficulty" value={plant.difficulty} />
               <Badge variant="light" value={plant.light} />
             </div>

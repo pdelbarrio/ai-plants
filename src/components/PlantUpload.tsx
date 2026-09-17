@@ -82,16 +82,24 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <Card className="p-8">
-        <h2 className="text-2xl font-semibold text-emerald-800 mb-6">
-          Añadir Nueva Planta
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <Card className="p-5 sm:p-8">
+        <div className="mb-7">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+            Nueva identificación
+          </p>
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+            Añadir Nueva Planta
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            Sube una fotografía clara para obtener un análisis detallado.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div
-            className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 ${
+            className={`relative rounded-xl border border-dashed p-7 transition-all duration-200 sm:p-8 ${
               isDragging
-                ? "border-emerald-500 bg-emerald-100"
-                : "border-emerald-200 hover:border-emerald-400"
+                ? "border-emerald-500 bg-emerald-50"
+                : "border-emerald-900/20 bg-[#dceade] hover:border-emerald-400 hover:bg-[#d4e7d8]"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -105,7 +113,7 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
               disabled={loading}
             />
             <div className="text-center">
-              <div className="mx-auto w-12 h-12 mb-4 text-emerald-500">
+              <div className="mx-auto mb-4 h-12 w-12 text-emerald-600">
                 <svg
                   className="w-full h-full"
                   fill="none"
@@ -120,23 +128,23 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
                   />
                 </svg>
               </div>
-              <p className="text-sm text-emerald-700">
+              <p className="text-sm text-slate-600">
                 Arrastra una imagen aquí o{" "}
-                <span className="text-emerald-600 font-medium">
+                <span className="font-semibold text-emerald-700">
                   selecciona un archivo
                 </span>
               </p>
-              <p className="text-xs text-emerald-600 mt-1">
+              <p className="mt-2 text-xs text-slate-500">
                 PNG, JPG o JPEG (máx. 5MB)
               </p>
             </div>
           </div>
 
           <div
-            className={`relative border-2 border-dashed rounded-xl p-8 transition-all duration-200 ${
+            className={`relative rounded-xl border border-dashed p-7 transition-all duration-200 sm:p-8 ${
               isDragging
-                ? "border-emerald-500 bg-emerald-100"
-                : "border-emerald-200 hover:border-emerald-400"
+                ? "border-emerald-500 bg-emerald-50"
+                : "border-emerald-900/20 bg-[#dceade] hover:border-emerald-400 hover:bg-[#d4e7d8]"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -154,7 +162,7 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
             </div>
 
             {loading && (
-              <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-xl">
+              <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-[#edf5ee]/90">
                 <div className="animate-spin h-10 w-10 border-4 border-emerald-500 border-t-transparent rounded-full" />
               </div>
             )}
@@ -170,10 +178,11 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
               <button
                 type="button"
                 onClick={() => setImage("")}
-                className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                aria-label="Quitar vista previa"
+                className="absolute right-3 top-3 rounded-full bg-white p-2.5 text-slate-500 shadow-md opacity-0 transition-all duration-200 hover:text-emerald-700 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 group-hover:opacity-100"
               >
                 <svg
-                  className="w-5 h-5 text-emerald-600"
+                  className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -190,18 +199,23 @@ export default function PlantUpload({ onPlantAdded }: PlantUploadProps) {
           )}
 
           {error && (
-            <div className="bg-red-100 text-red-700 text-sm p-4 rounded-lg border border-red-200">
+            <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="bg-emerald-100 text-emerald-800 p-3 rounded-lg text-center border border-emerald-300">
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-center text-sm font-medium text-emerald-800">
               Planta añadida correctamente 🌱
             </div>
           )}
 
-          <Button type="submit" disabled={!image} isLoading={loading}>
+          <Button
+            className="w-full sm:w-auto"
+            type="submit"
+            disabled={!image}
+            isLoading={loading}
+          >
             {loading ? "Procesando..." : "Analizar Planta"}
           </Button>
         </form>

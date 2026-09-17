@@ -16,9 +16,9 @@ export default function ProgressBar({
   valueLabel,
 }: ProgressBarProps) {
   const variants = {
-    emerald: "bg-gradient-to-r from-emerald-400 to-teal-400",
-    amber: "bg-gradient-to-r from-amber-400 to-orange-400",
-    sky: "bg-gradient-to-r from-sky-400 to-blue-400",
+    emerald: "bg-emerald-600",
+    amber: "bg-amber-500",
+    sky: "bg-sky-500",
   };
 
   const bgColors = {
@@ -31,11 +31,11 @@ export default function ProgressBar({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-emerald-700">{label}</span>
-        <span className="font-medium text-emerald-800">{valueLabel}</span>
+      <div className="mb-2 flex items-center justify-between text-sm">
+        <span className="text-slate-600">{label}</span>
+        <span className="font-semibold text-slate-800">{valueLabel}</span>
       </div>
-      <div className={`h-2 ${bgColors[variant]} rounded-full`}>
+      <div className={`h-1.5 rounded-full ${bgColors[variant]}`}>
         <div
           className={`h-full ${variants[variant]} rounded-full transition-all duration-300`}
           style={{ width: `${percentage}%` }}

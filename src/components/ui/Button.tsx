@@ -17,15 +17,14 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "px-6 py-3 rounded-xl font-medium transition-all duration-200";
+    "inline-flex items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 active:scale-[0.98]";
 
   const variants = {
     primary:
-      "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-md hover:shadow-lg",
+      "bg-emerald-700 text-white shadow-[0_8px_16px_-10px_rgba(4,120,87,0.8)] hover:bg-emerald-800 hover:shadow-[0_10px_20px_-10px_rgba(4,120,87,0.9)]",
     secondary:
-      "bg-white hover:bg-gray-50 text-emerald-700 border border-emerald-200",
-    danger:
-      "bg-gradient-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white shadow-md",
+      "border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-800",
+    danger: "bg-rose-600 text-white shadow-sm hover:bg-rose-700",
   };
 
   const loadingSpinner = (

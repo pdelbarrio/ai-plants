@@ -48,15 +48,18 @@ export default function PlantModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-emerald-100">
-        <div className="p-8">
-          <div className="flex justify-between items-start mb-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4 backdrop-blur-sm">
+      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-emerald-900/15 bg-[#e4efe6] shadow-[0_24px_80px_-24px_rgba(15,23,42,0.45)]">
+        <div className="p-5 sm:p-8">
+          <div className="mb-7 flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-emerald-800">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                Ficha de planta
+              </p>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
                 {plant.name}
               </h2>
-              <div className="flex items-center space-x-2 mt-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <Badge
                   variant="difficulty"
                   value={plant.difficulty}
@@ -71,10 +74,11 @@ export default function PlantModal({
             </div>
             <button
               onClick={onClose}
-              className="text-emerald-600 hover:text-emerald-800 transition-colors"
+              aria-label="Cerrar ficha de planta"
+              className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
               <svg
-                className="w-6 h-6"
+                className="h-5 w-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -89,40 +93,38 @@ export default function PlantModal({
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             <div className="space-y-6">
-              <div className="aspect-square rounded-xl overflow-hidden shadow-md">
+              <div className="aspect-square overflow-hidden rounded-xl bg-slate-100 shadow-sm">
                 <img
                   src={plant.image}
                   alt={plant.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-emerald-800 mb-4">
+              <div className="rounded-xl border border-emerald-900/15 bg-[#d7e7da] p-5 sm:p-6">
+                <h3 className="mb-3 text-lg font-semibold text-slate-900">
                   Descripción
                 </h3>
-                <p className="text-emerald-700 leading-relaxed">
-                  {plant.description}
-                </p>
+                <p className="leading-7 text-slate-600">{plant.description}</p>
               </div>
             </div>
 
             <div className="space-y-6">
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-emerald-800 mb-4">
+              <div className="rounded-xl border border-emerald-900/15 bg-[#d7e7da] p-5 sm:p-6">
+                <h3 className="mb-4 text-lg font-semibold text-slate-900">
                   Cuidados
                 </h3>
-                <div className="space-y-4">
+                <div className="space-y-5">
                   <div>
-                    <label className="block text-sm font-medium text-emerald-700 mb-2">
+                    <label className="mb-2 block text-sm font-semibold text-slate-600">
                       Riego
                     </label>
                     <div className="flex flex-wrap gap-2">
                       {plant.water.map((day, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-medium"
+                          className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-800"
                         >
                           {day}
                         </span>
@@ -148,7 +150,7 @@ export default function PlantModal({
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end">
+          <div className="mt-8 flex justify-end border-t border-slate-100 pt-6">
             <Button
               variant={showDeleteConfirm ? "danger" : "secondary"}
               onClick={handleDelete}

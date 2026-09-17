@@ -41,26 +41,41 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-3xl text-black font-bold text-center mb-8">
-          Analizador de plantas con IA
-        </h1>
+    <main className="min-h-screen bg-[#dce8de]">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+        <header className="mb-10 text-center sm:mb-12">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
+            Tu espacio botánico
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            Analizador de plantas con IA
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
+            Identifica tus plantas y consulta sus cuidados en un solo lugar.
+          </p>
+        </header>
 
-        <div className="mb-8">
+        <div className="mb-10 sm:mb-12">
           <PlantUpload onPlantAdded={handlePlantAdded} />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-black">
-            Mis Plantas
-          </h2>
+        <section className="rounded-2xl border border-emerald-900/15 bg-[#d3e2d6] p-5 shadow-[0_12px_40px_-24px_rgba(31,42,36,0.35)] sm:p-8">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                Colección
+              </p>
+              <h2 className="text-2xl font-semibold tracking-tight text-slate-900">
+                Mis Plantas
+              </h2>
+            </div>
+          </div>
           <PlantList
             onPlantClick={handlePlantClick}
             key={refreshTrigger}
             selectedId={selectedId ?? undefined}
           />
-        </div>
+        </section>
 
         {selectedPlant && (
           <PlantModal
@@ -70,6 +85,6 @@ export default function Home() {
           />
         )}
       </div>
-    </div>
+    </main>
   );
 }

@@ -9,14 +9,14 @@ interface BadgeProps {
 export default function Badge({ variant, value, className = "" }: BadgeProps) {
   const variants = {
     difficulty: {
-      easy: "bg-emerald-100 text-emerald-800",
-      medium: "bg-amber-100 text-amber-800",
-      hard: "bg-rose-100 text-rose-800",
+      easy: "border border-emerald-200 bg-emerald-50 text-emerald-800",
+      medium: "border border-amber-200 bg-amber-50 text-amber-800",
+      hard: "border border-rose-200 bg-rose-50 text-rose-800",
     },
     light: {
-      low: "bg-sky-100 text-sky-800",
-      medium: "bg-amber-100 text-amber-800",
-      high: "bg-orange-100 text-orange-800",
+      low: "border border-sky-200 bg-sky-50 text-sky-800",
+      medium: "border border-amber-200 bg-amber-50 text-amber-800",
+      high: "border border-orange-200 bg-orange-50 text-orange-800",
     },
   };
 
@@ -35,7 +35,7 @@ export default function Badge({ variant, value, className = "" }: BadgeProps) {
 
   return (
     <span
-      className={`px-2 py-1 rounded-full text-xs font-medium ${
+      className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide ${
         variants[variant][value as keyof (typeof variants)[typeof variant]]
       } ${className}`}
     >
